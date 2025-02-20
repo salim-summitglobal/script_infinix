@@ -1,6 +1,7 @@
-import csv
-import io
+import os
 import tempfile
+from datetime import datetime
+
 
 from fastapi import APIRouter, HTTPException, UploadFile, File
 
@@ -10,17 +11,13 @@ router = APIRouter()
 
 @router.post("/generate/audience")
 async def get_generate_audience(file: UploadFile = File(...)):
-    """
-    Endpoint untuk meng-upload file CSV, lalu dibaca dengan Spark.
-    """
     try:
-        # 1. Baca isi file yang di-upload ke dalam memori
         contents = await file.read()
         decoded_content = contents.decode("utf-8")
 
         with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as tmp:
             tmp.write(decoded_content)
-            temp_path = tmp.name  # path ke file CSV sementara
+            temp_path = tmp.name
 
 
         spark_df = spark.read \
@@ -29,16 +26,41 @@ async def get_generate_audience(file: UploadFile = File(...)):
             .csv(temp_path)
 
 
-        print("DataFrame Schema:")
         spark_df.printSchema()
+        spark_df.createOrReplaceTempView("temp_table")
 
-        rows = spark_df.collect()
-        data_list = [row.asDict() for row in rows]
+        query_select = []
+        for col in spark_df.columns:
+            if col not in ['education', 'financial_services','media_entertainment']:
+                continue
+            count = 0
+            if col == 'education':
+                count = 10
+            if col == 'financial_services':
+                count = 30
+            if col == 'media_entertainment':
+                count = 80
+            query_select.append(f"{count} AS {col}_probability")
+
+        result_df = spark.sql(f"""
+            SELECT *, {', '.join(query_select)}
+            FROM temp_table
+        """)
+
+        result_df.printSchema()
+        folder_number = datetime.now()
+
+        print_path = result_df.write.csv(f"/home/sgt/Downloads/output_{folder_number}/", header=True)
+
 
         return {
-            "message": "File processed successfully",
-            "data": data_list
+            "message": f"File processed successfully{print_path}",
+            # "data": query_select
         }
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+    finally:
+        os.remove(temp_path)
+        spark.stop()
