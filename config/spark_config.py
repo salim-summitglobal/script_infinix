@@ -6,12 +6,4 @@ spark = SparkSession.builder \
     .config("spark.driver.host", "localhost") \
     .config("spark.driver.bindAddress", "127.0.0.1") \
     .getOrCreate()
-spark.conf.set("spark.sql.debug.maxToStringFields", 2000)
-
-schema = StructType([
-    StructField("name", StringType(), True),
-    StructField("age", IntegerType(), True)
-])
-
-initial_data = [("John", 30), ("Alice", 25), ("Bob", 35)]
-df = spark.createDataFrame(initial_data, schema)
+spark.conf.set("spark.sql.debug.maxToStringFields", '2000')

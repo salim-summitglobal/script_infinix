@@ -48,14 +48,15 @@ async def get_generate_audience(file: UploadFile = File(...)):
         """)
 
         result_df.printSchema()
-        folder_number = datetime.now()
+        folder_number = str(int(datetime.now().timestamp()))
+        base_directory = os.path.join(os.path.expanduser("~"), "Downloads")
+        output_path = os.path.join(base_directory, f"output_{folder_number}")
 
-        print_path = result_df.write.csv(f"/home/sgt/Downloads/output_{folder_number}/", header=True)
+        result_df.write.csv(path=output_path, header=True, mode="overwrite")
 
 
         return {
-            "message": f"File processed successfully{print_path}",
-            # "data": query_select
+            "message": f"File processed successfully Downloads/output_{folder_number}/",
         }
 
     except Exception as e:
