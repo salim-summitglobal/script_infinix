@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from uvicorn import run
-
+from dotenv import load_dotenv
 
 from src.routes.script_routers import router as script_router
 
 
+load_dotenv()
 
 app = FastAPI(
     title="Spark FastAPI",
