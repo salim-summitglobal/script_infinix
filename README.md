@@ -23,3 +23,10 @@ AWS_BUCKET_NAME=
 ```
 # Info
 #### After install library, add to [requirements.txt](requirements.txt)
+
+
+# Example api run
+```
+curl --location 'http://localhost:8002/generate/audience' \--form 'file=@"/path/to/file"'
+
+```
