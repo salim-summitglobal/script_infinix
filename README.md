@@ -1,17 +1,42 @@
-# SCRIPT INFINIX
+# Project Setup Guide
 
 # Install pip
-```bash
+```sh
 python -m pip install --upgrade pip
 ```
 
 # Install venv
-```bash
+```sh
 pip install virtualenv
 ```
 
-# First Install
-```bash
+# Create a Virtual Environment
+```sh
+python -m venv venv
+```
+
+or for Python 3:
+```sh
+python3 -m venv venv
+```
+
+# Activate the Virtual Environment
+### **For Windows (Command Prompt)**
+```sh
+venv\Scripts\activate
+```
+or **PowerShell**:
+```sh
+venv\Scripts\Activate.ps1
+```
+
+### **For macOS/Linux**
+```sh
+source venv/bin/activate
+```
+
+# Install Dependencies
+```sh
 pip install -r requirements.txt
 ```
 
