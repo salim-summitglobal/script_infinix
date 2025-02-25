@@ -18,4 +18,4 @@ app.include_router(script_router, prefix="")
 
 
 if __name__ == "__main__":
-    run("src.main:app", host="0.0.0.0", port=8002, reload=True)
+    run("src.main:app", host="0.0.0.0", port=8000, reload=True)
