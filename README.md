@@ -1,5 +1,15 @@
 # SCRIPT INFINIX
 
+# Install pip
+```bash
+python -m pip install --upgrade pip
+```
+
+# Install venv
+```bash
+pip install virtualenv
+```
+
 # First Install
 ```bash
 pip install -r requirements.txt
